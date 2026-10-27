@@ -1,1 +1,92 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MicroWatch AI — Prototype</title>
+<style>
+:root{--navy:#102b52;--blue:#087eae;--cyan:#42c7df;--pale:#eaf8fc;--purple:#eee8ff;--ink:#17314f;--muted:#5d7188;--green:#dff8eb;--line:#cce5f0;--white:#fff}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#edfaff,#f7f5ff 55%,#e9fbf4);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
+header{background:rgba(255,255,255,.92);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3;backdrop-filter:blur(10px)}
+.nav{max-width:1120px;margin:auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850;font-size:1.15rem;color:var(--navy)}.drop{width:38px;height:42px;border-radius:50% 50% 50% 8px;transform:rotate(-45deg);background:linear-gradient(145deg,#53d7ec,#087eae);display:grid;place-items:center;color:white;font-size:19px;box-shadow:0 5px 14px #158dbb44}.drop span{transform:rotate(45deg)}
+nav{display:flex;gap:8px;flex-wrap:wrap}button,.navbtn{font:inherit;border:0;cursor:pointer;border-radius:12px;padding:11px 15px;font-weight:700;transition:.18s}button:hover,.navbtn:hover{transform:translateY(-1px);filter:brightness(.98)}.navbtn{background:transparent;color:var(--ink)}.navbtn.active{background:var(--purple);color:#4b3e91}
+main{max-width:1120px;margin:auto;padding:30px 22px 60px}.screen{display:none}.screen.active{display:block}
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:26px;align-items:center;padding:34px 0 28px}.eyebrow{display:inline-block;background:#d9f7ef;color:#087a69;padding:8px 12px;border-radius:999px;font-weight:800;font-size:.83rem;letter-spacing:.03em}
+h1{font-size:clamp(2.6rem,6vw,4.8rem);line-height:.98;letter-spacing:-.05em;color:var(--navy);margin:18px 0}.grad{color:var(--blue)}.lead{font-size:1.12rem;line-height:1.7;color:var(--muted);max-width:620px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:23px}.primary{background:linear-gradient(120deg,#087eae,#16a9c5);color:white;box-shadow:0 8px 18px #0785ad30}.secondary{background:white;color:var(--navy);border:1px solid var(--line)}.art{min-height:300px;border-radius:30px;background:linear-gradient(145deg,#b9f1f5,#e4e3ff 70%,#d7f9e9);display:grid;place-items:center;position:relative;overflow:hidden;padding:25px}.planet{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#b2f5a9,#3dbfbc 45%,#1475a8 80%);box-shadow:inset -15px -15px 30px #164b8550,0 20px 45px #176c8b30;display:grid;place-items:center;font-size:5rem}.float{position:absolute;background:#ffffffdb;border:1px solid white;border-radius:15px;padding:12px 15px;font-weight:800;box-shadow:0 8px 20px #204d7020}.f1{top:22px;left:15px}.f2{right:12px;bottom:24px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 30px}.stat,.panel,.feature{background:#ffffffd9;border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 8px 25px #234e6810}.stat strong{display:block;font-size:1.3rem;color:var(--navy);margin-bottom:5px}.stat span{color:var(--muted);font-size:.92rem}
+.section-title{font-size:1.8rem;color:var(--navy);margin:16px 0}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.feature .ico{font-size:1.8rem}.feature h3{margin:10px 0 7px}.feature p{margin:0;color:var(--muted);line-height:1.55}
+.pagehead{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:14px 0 24px}.pagehead h2{font-size:2.2rem;margin:0;color:var(--navy)}.pagehead p{color:var(--muted);margin:7px 0 0;line-height:1.5}
+.layout{display:grid;grid-template-columns:1fr .9fr;gap:18px}.panel h3{margin:0 0 15px;color:var(--navy)}label{display:block;font-weight:750;margin:14px 0 7px}input,select,textarea{font:inherit;width:100%;padding:12px;border:1px solid #bfdce9;border-radius:12px;background:#fbfeff;color:var(--ink)}input[type=file]{padding:10px;background:#f6fcff}.dropzone{border:2px dashed #85c9dd;background:#f4fcff;border-radius:17px;padding:22px;text-align:center}.preview{width:100%;max-height:260px;object-fit:contain;border-radius:14px;margin-top:12px;background:#edf5f8;display:none}.hint{color:var(--muted);font-size:.88rem;line-height:1.5}.full{width:100%;margin-top:16px}.sample-art{height:250px;border-radius:15px;background:linear-gradient(135deg,#e8f7fc,#f2eaff);display:grid;place-items:center;text-align:center;padding:15px;color:#53718b}.result-banner{display:flex;gap:13px;align-items:center;padding:15px;background:#fff6df;border:1px solid #f1dfa5;border-radius:15px;margin:14px 0}.result-banner .symbol{font-size:1.7rem}.result-banner p{margin:4px 0 0;color:#77613a;line-height:1.45}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.metric{background:#f2f9fc;border-radius:14px;padding:15px}.metric strong{font-size:1.35rem;color:var(--navy);display:block}.metric span{font-size:.82rem;color:var(--muted)}.pill{display:inline-block;padding:6px 10px;border-radius:99px;background:#e6f5ff;color:#176d93;font-size:.82rem;font-weight:800}.notice{font-size:.88rem;line-height:1.55;color:#705e37;background:#fff8e9;border:1px solid #f2dfb6;border-radius:14px;padding:14px;margin-top:15px}
+.report-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.report-head h3{margin:0}.table{width:100%;border-collapse:collapse;margin-top:12px}.table td{padding:12px 8px;border-bottom:1px solid #e1edf2}.table td:first-child{color:var(--muted)}.table td:last-child{text-align:right;font-weight:750}.footer{text-align:center;padding:24px 12px;color:var(--muted);font-size:.9rem}.smallcaps{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}.empty{padding:32px;text-align:center;color:var(--muted)}
+@media(max-width:760px){.hero,.layout{grid-template-columns:1fr}.hero{padding-top:22px}.art{min-height:240px}.feature-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.nav{align-items:flex-start;flex-direction:column}.nav nav{width:100%}.navbtn{flex:1;padding:10px 8px}.pagehead{align-items:flex-start;flex-direction:column}.metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+<div class="brand"><div class="drop"><span>✦</span></div>MicroWatch AI</div>
+<nav aria-label="Main navigation">
+<button class="navbtn active" data-go="home">Home</button><button class="navbtn" data-go="scan">Upload / Scan</button><button class="navbtn" data-go="results">Results</button><button class="navbtn" data-go="report">Report</button>
+</nav></div></header>
+<main>
+<section class="screen active" id="home">
+<div class="hero">
+<div><span class="eyebrow">🌎 AI FOR A CLEANER TOMORROW</span><h1>Small particles.<br><span class="grad">Big impact.</span></h1><p class="lead">Explore a smarter way to study possible microplastic particles in environmental samples. Upload an image, review a demonstration analysis, and create a sample report.</p><div class="actions"><button class="primary" data-go="scan">Start a sample scan →</button><button class="secondary" data-go="report">View report page</button></div></div>
+<div class="art"><div class="float f1">🔬 Sample analysis</div><div class="planet">🌍</div><div class="float f2">💧 Cleaner water</div></div>
+</div>
+<div class="stats"><div class="stat"><strong>Upload</strong><span>Add a sample image</span></div><div class="stat"><strong>Analyze</strong><span>Explore image indicators</span></div><div class="stat"><strong>Report</strong><span>Save a demo report</span></div></div>
+<h2 class="section-title">Designed for environmental awareness</h2>
+<div class="feature-grid"><div class="feature"><div class="ico">📷</div><h3>Image input</h3><p>Choose a sample type and upload an image from your device.</p></div><div class="feature"><div class="ico">🧠</div><h3>Analysis workflow</h3><p>Try a working prototype flow that explains the limits of image-based screening.</p></div><div class="feature"><div class="ico">📄</div><h3>Detailed report</h3><p>Review sample details and download a report for your classroom demonstration.</p></div></div>
+</section>
+<section class="screen" id="scan">
+<div class="pagehead"><div><span class="smallcaps">Step 01 / Sample input</span><h2>Upload & scan</h2><p>Choose an image and enter basic details about the sample.</p></div><span class="pill">Prototype mode</span></div>
+<div class="layout">
+<div class="panel"><h3>Sample information</h3><label for="sampleType">Sample type</label><select id="sampleType"><option>Water</option><option>Food</option><option>Soil</option><option>Other</option></select>
+<label for="sampleLocation">Sample location (optional)</label><input id="sampleLocation" placeholder="e.g. Classroom water sample">
+<label for="sampleDate">Collection date</label><input id="sampleDate" type="date">
+<label for="imageInput">Upload sample image</label><div class="dropzone"><div style="font-size:2rem">🖼️</div><strong>Choose an image to inspect</strong><p class="hint">JPG, PNG or WebP. A microscopy image is best for a meaningful scientific discussion.</p><input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp"><img id="preview" class="preview" alt="Uploaded sample preview"></div>
+<button class="primary full" id="analyzeBtn">Run prototype analysis →</button><p class="hint">This demonstration uses basic image properties only. It does not identify or confirm plastic chemically.</p></div>
+<div class="panel"><h3>Before you scan</h3><div class="sample-art"><div><div style="font-size:3rem">🔬 💧</div><strong>Sample image preview</strong><p class="hint">Your selected image will appear here.</p></div></div><h3 style="margin-top:18px">What this prototype demonstrates</h3><p class="hint">✓ Image upload and preview<br>✓ Sample metadata<br>✓ A visible analysis workflow<br>✓ Result summary and downloadable report</p><div class="notice">Scientific note: particles that look similar may be plastic, natural fibres, minerals or other materials. Reliable identification may require microscopy and specialist laboratory methods.</div></div>
+</div></section>
+<section class="screen" id="results">
+<div class="pagehead"><div><span class="smallcaps">Step 02 / Output</span><h2>Scan results</h2><p>Review the output generated by the current prototype.</p></div><button class="secondary" data-go="scan">← Change sample</button></div>
+<div id="resultsContent" class="panel"><div class="empty"><div style="font-size:2.5rem">🧪</div><h3>No sample analyzed yet</h3><p>Upload an image on the Scan page, then run the prototype analysis.</p><button class="primary" data-go="scan">Go to upload / scan</button></div></div>
+</section>
+<section class="screen" id="report">
+<div class="pagehead"><div><span class="smallcaps">Step 03 / Documentation</span><h2>Detailed report</h2><p>Review sample information and export a report.</p></div><button class="primary" id="downloadBtn">⬇ Download report (.txt)</button></div>
+<div id="reportContent" class="panel"><div class="empty"><div style="font-size:2.5rem">📄</div><h3>Your report will appear here</h3><p>Run a prototype analysis first to create a sample report.</p><button class="primary" data-go="scan">Start a sample scan</button></div></div>
+</section>
+<div class="footer">MicroWatch AI · Student capstone prototype · Detect thoughtfully, protect our environment 🌱</div>
+</main>
+<script>
+const screens=[...document.querySelectorAll('.screen')];
+function go(name){screens.forEach(s=>s.classList.toggle('active',s.id===name));document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===name));window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+const input=document.getElementById('imageInput'), preview=document.getElementById('preview');
+let imageData='', imageName='', analysis=null;
+input.addEventListener('change',()=>{const file=input.files[0];if(!file)return;if(!file.type.startsWith('image/')){alert('Please choose an image file.');input.value='';return;}imageName=file.name;const reader=new FileReader();reader.onload=e=>{imageData=e.target.result;preview.src=imageData;preview.style.display='block';};reader.readAsDataURL(file);});
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.getElementById('analyzeBtn').addEventListener('click',()=>{
+ if(!imageData){alert('Please upload a sample image first.');return;}
+ const img=new Image();img.onload=()=>{
+  const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
+  const w=120,h=Math.max(1,Math.round(img.height*w/img.width));canvas.width=w;canvas.height=Math.min(h,120);
+  ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  const d=ctx.getImageData(0,0,canvas.width,canvas.height).data;let vivid=0,bright=0,edge=0,prev=0,pixels=0;
+  for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2];const max=Math.max(r,g,b),min=Math.min(r,g,b);if(max-min>55&&max>90)vivid++;if((r+g+b)/3>190)bright++;if(i%16===0){const lum=(r+g+b)/3;if(Math.abs(lum-prev)>42)edge++;prev=lum;}pixels++;}
+  const vividPct=Math.round(vivid/pixels*100),edgePct=Math.round(edge/Math.max(1,pixels/4)*100);
+  const sample={type:document.getElementById('sampleType').value,location:document.getElementById('sampleLocation').value.trim()||'Not provided',date:document.getElementById('sampleDate').value||new Date().toISOString().slice(0,10),imageName,imageData,vividPct,edgePct,brightPct:Math.round(bright/pixels*100),created:new Date().toLocaleString()};
+  analysis=sample;renderResults();renderReport();go('results');
+ };img.onerror=()=>alert('Could not read this image. Please try another file.');img.src=imageData;
+});
+function renderResults(){if(!analysis)return;const a=analysis;
+document.getElementById('resultsContent').innerHTML=`<div class="report-head"><h3>Analysis summary</h3><span class="pill">Image screening demo</span></div><div class="result-banner"><div class="symbol">⚠️</div><div><strong>Visual indicators calculated — not a confirmed microplastic detection</strong><p>This version measures broad image properties. It cannot tell whether particles are plastic.</p></div></div><div class="layout"><div><img src="${a.imageData}" alt="Uploaded sample" style="width:100%;max-height:340px;object-fit:contain;border-radius:15px;background:#f0f7fa"><p class="hint">File: ${escapeHTML(a.imageName)}</p></div><div><div class="smallcaps">Sample details</div><table class="table"><tr><td>Sample type</td><td>${escapeHTML(a.type)}</td></tr><tr><td>Location</td><td>${escapeHTML(a.location)}</td></tr><tr><td>Collection date</td><td>${escapeHTML(a.date)}</td></tr></table><div class="smallcaps" style="margin-top:18px">Image properties</div><div class="metrics"><div class="metric"><strong>${a.vividPct}%</strong><span>Highly saturated pixels</span></div><div class="metric"><strong>${a.edgePct}%</strong><span>Brightness transitions (rough estimate)</span></div><div class="metric"><strong>${a.brightPct}%</strong><span>Bright pixels</span></div></div></div></div><div class="notice"><strong>Interpretation:</strong> These values describe the image only. They are not particle counts, a confidence score, a health-risk assessment, or evidence that microplastics are present. A trained and validated model plus suitable laboratory verification would be needed for stronger claims.</div><div class="actions"><button class="primary" data-go="report">View detailed report →</button><button class="secondary" data-go="scan">Analyze another image</button></div>`;
+document.querySelectorAll('#resultsContent [data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+}
+function renderReport(){if(!analysis)return;const a=analysis;
+document.getElementById('reportContent').innerHTML=`<div class="report-head"><div><span class="smallcaps">MicroWatch AI · Prototype report</span><h3 style="margin-top:7px">${escapeHTML(a.type)} sample</h3></div><span class="pill">Demo analysis</span></div><table class="table"><tr><td>Image file</td><td>${escapeHTML(a.imageName)}</td></tr><tr><td>Sample type</td><td>${escapeHTML(a.type)}</td></tr><tr><td>Location</td><td>${escapeHTML(a.location)}</td></tr><tr><td>Collection date</td><td>${escapeHTML(a.date)}</td></tr><tr><td>Analysis run</td><td>${escapeHTML(a.created)}</td></tr><tr><td>Highly saturated pixels</td><td>${a.vividPct}%</td></tr><tr><td>Brightness transitions (rough estimate)</td><td>${a.edgePct}%</td></tr><tr><td>Bright pixels</td><td>${a.brightPct}%</td></tr></table><div class="notice"><strong>Limitations and responsible use</strong><br>This student prototype demonstrates image upload and basic pixel-property calculations. It does not detect, count, or confirm microplastics and does not provide a health-risk level. Visual appearance alone cannot reliably establish a particle's material identity. Scientific confirmation may require appropriate laboratory analysis.</div><p class="hint">Prepared by: MicroWatch AI student project team</p>`;
+}
+document.getElementById('downloadBtn').addEventListener('click',()=>{if(!analysis){alert('Please run an analysis before downloading a report.');return;}const a=analysis;const content=`MICROWATCH AI — PROTOTYPE REPORT\n\nSample type: ${a.type}\nLocation: ${a.location}\nCollection date: ${a.date}\nImage file: ${a.imageName}\nAnalysis run: ${a.created}\n\nBASIC IMAGE PROPERTIES (NOT MICROPLASTIC DETECTION)\nHighly saturated pixels: ${a.vividPct}%\nBrightness transitions (rough estimate): ${a.edgePct}%\nBright pixels: ${a.brightPct}%\n\nIMPORTANT LIMITATION\nThis student prototype demonstrates image upload and basic pixel-property calculations. It does not detect, count, or confirm microplastics and does not provide a health-risk level. Visual appearance alone cannot reliably establish a particle's material identity. Scientific confirmation may require appropriate laboratory analysis.\n`;const blob=new Blob([content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='MicroWatch_AI_Prototype_Report.txt';link.click();URL.revokeObjectURL(url);});
+document.getElementById('sampleDate').value=new Date().toISOString().slice(0,10);
+</script>
+</body></html>
